@@ -4,46 +4,34 @@ struct ContentView: View {
     var body: some View {
         ZStack {
             Image("machine")
-            .resizable()
-            .edgesIgnoringSafeArea(.all)
+                .resizable()
+                .edgesIgnoringSafeArea(.all)
             VStack {
-                pegs(colors: [PegItem(color: .green), PegItem(color: .green), PegItem(color: .green), PegItem(color: .red)])
-                pegs(colors: [PegItem(color: .yellow), PegItem(color: .blue), PegItem(color: .green), PegItem(color: .red)])
-                pegs(colors: [PegItem(color: .blue), PegItem(color: .blue), PegItem(color: .blue), PegItem(color: .yellow)])
-                
-                pegs(colors: [PegItem(color: .blue), PegItem(color: .blue), PegItem(color: .blue), PegItem(color: .yellow)])
-                pegs(colors: [PegItem(color: .blue), PegItem(color: .blue), PegItem(color: .blue), PegItem(color: .yellow)])
+                pegs(colors: [.red, .green, .blue, .yellow])
+                pegs(colors: [.red, .red, .blue, .yellow])
+                pegs(colors: [.red, .blue, .blue, .yellow])
+                pegs(colors: [.blue, .yellow, .yellow, .yellow])
+
             }
             .padding()
+            .glassEffect(in: .rect(cornerRadius: 20))
         }
     }
-    
-    func pegs(colors: [PegItem]) -> some View {
-        HStack(spacing: 20) {
-            ForEach(colors) { x in
-                GlassPeg(color: x.color)
+
+    func pegs(colors: [Color]) -> some View {
+        HStack {
+
+            ForEach(colors.indices, id: \.self) {
+                index in
+                Circle().fill(colors[index].gradient.opacity(0.5)).glassEffect()
+                    .aspectRatio(contentMode: .fit)
             }
+            MatchMarkers(matches: [.exact, .nomatch, .exact, .inexact])
         }
     }
 }
 
-struct PegItem: Identifiable {
-    let id = UUID()
-    let color: Color
-}
 
-struct GlassPeg: View {
-    var color: Color
-    
-    var body: some View {
-        Circle()
-            .fill(color.gradient.opacity(0.4))
-    
-            .frame(width: 70.0, height: 70.0)
-            .glassEffect()
-            
-    }
-}
 
 #Preview {
     ContentView()
